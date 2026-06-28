@@ -61,15 +61,31 @@ added as configuration, not a rebuild.
 
 EFFORT & TIMELINE
 
-  Tier 0 — Demo: 2–4 weeks
-    1 state, synthetic data, generates packets (no portal automation, no real
-    patient data).
+Two kinds of work run in parallel at very different speeds. Technical work is fast
+and largely in our control (a developer + an AI agent). Regulatory & people work runs
+on others' calendars — legal, IT, compliance, state agencies — and is usually the
+critical path that determines when we can actually go live.
 
-  Tier 1 — Production pilot: 2–4 months
-    1 state, real data, compliant hosting, staff-submitted packets, simple data feed.
+  Tier 0 — Demo: 2–4 weeks (elapsed)
+    Technical: build screening, document extraction, and packet assembly for AZ on
+      synthetic data.
+    Regulatory/people: none — synthetic data, so no compliance gate.
 
-  Tier 2 — Scaled: 6–12 months + maintenance
-    3 states, portal auto-submission, renewals, hardened.
+  Tier 1 — Production pilot: 2–4 months (elapsed; gated by the people track)
+    Technical: harden the pipeline; add a simple EHR data feed and the staff
+      review/approve UI (~3–4 weeks of build).
+    Regulatory/people: sign BAAs, pass Connections' security review, get EHR data
+      access, confirm HPE qualification.
+
+  Tier 2 — Scaled: 6–12 months + maintenance (elapsed)
+    Technical: add Virginia & Maryland rules packs, portal auto-submission, renewals.
+    Regulatory/people: per-state compliance, portal access/agreements, ongoing rule
+      updates as OBBBA changes roll out.
+
+  Key insight: the Tier 1 coding is only ~3–4 weeks, but elapsed time is 2–4 months
+  because the regulatory/people track gates go-live. Start those conversations (BAAs,
+  EHR access, HPE) early and in parallel with the Tier 0 build — they are the long
+  pole, not the software.
 
 
 COST

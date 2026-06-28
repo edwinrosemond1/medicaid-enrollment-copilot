@@ -33,11 +33,15 @@ Review is **exception-based** — only the ~10–20% of messy cases need human e
 **Arizona (AHCCCS) first**, then **Virginia** and **Maryland**. All three are Medicaid-expansion states, so one main pathway (MAGI adult) covers most crisis patients. New states are added as configuration, not a rebuild.
 
 ### Effort & timeline
-| Stage | What you get | Time |
-|---|---|---|
-| **Tier 0 — Demo** | 1 state, synthetic data, generates packets (no portal automation, no real patient data) | **2–4 weeks** |
-| **Tier 1 — Production pilot** | 1 state, real data, compliant hosting, staff-submitted packets, simple data feed | **2–4 months** |
-| **Tier 2 — Scaled** | 3 states, portal auto-submission, renewals, hardened | **6–12 months** + maintenance |
+Two kinds of work run in parallel at very different speeds. **Technical work** is fast and largely in our control (a developer + an AI agent). **Regulatory & people work** runs on others' calendars — legal, IT, compliance, state agencies — and is usually the *critical path* that determines when we can actually go live.
+
+| Stage | Technical work (we control) | Regulatory & people work (others' timelines) | Elapsed time |
+|---|---|---|---|
+| **Tier 0 — Demo** | Build screening, document extraction, and packet assembly for AZ on synthetic data | None — synthetic data, so no compliance gate | **2–4 weeks** |
+| **Tier 1 — Production pilot** | Harden the pipeline; add a simple EHR data feed and the staff review/approve UI (~3–4 weeks of build) | Sign BAAs, pass Connections' security review, get EHR data access, confirm HPE qualification | **2–4 months** — gated by the people track |
+| **Tier 2 — Scaled** | Add Virginia & Maryland rules packs, portal auto-submission, renewals | Per-state compliance, portal access/agreements, ongoing rule updates as OBBBA changes roll out | **6–12 months** + maintenance |
+
+**The key insight:** the Tier 1 *coding* is only ~3–4 weeks, but elapsed time is 2–4 months because the regulatory/people track gates go-live. Those conversations (BAAs, EHR access, HPE) should start **early and in parallel** with the Tier 0 build — they are the long pole, not the software.
 
 ### Cost
 - **Upfront, to a production pilot: ~$15–40K all-in.** Most of that is compliance setup and data integration — the AI tooling that writes the software is only ~$1K, and a Tier 0 demo on synthetic data costs little more.

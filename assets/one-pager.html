@@ -65,12 +65,14 @@
   <p><strong>Arizona (AHCCCS) first</strong>, then <strong>Virginia</strong> and <strong>Maryland</strong>. All three are Medicaid-expansion states, so one main pathway (MAGI adult) covers most crisis patients. New states are added as configuration, not a rebuild.</p>
 
   <h2>Effort &amp; timeline</h2>
+  <p>Two kinds of work run in parallel at very different speeds. <strong>Technical work</strong> is fast and largely in our control (a developer + an AI agent). <strong>Regulatory &amp; people work</strong> runs on others' calendars — legal, IT, compliance, state agencies — and is usually the <em>critical path</em> that determines when we can actually go live.</p>
   <table>
-    <tr><th>Stage</th><th>What you get</th><th>Time</th></tr>
-    <tr><td><strong>Tier 0 — Demo</strong></td><td>1 state, synthetic data, generates packets (no portal automation, no real patient data)</td><td><strong>2–4 weeks</strong></td></tr>
-    <tr><td><strong>Tier 1 — Production pilot</strong></td><td>1 state, real data, compliant hosting, staff-submitted packets, simple data feed</td><td><strong>2–4 months</strong></td></tr>
-    <tr><td><strong>Tier 2 — Scaled</strong></td><td>3 states, portal auto-submission, renewals, hardened</td><td><strong>6–12 months</strong> + maintenance</td></tr>
+    <tr><th>Stage</th><th>Technical work (we control)</th><th>Regulatory &amp; people work (others' timelines)</th><th>Elapsed</th></tr>
+    <tr><td><strong>Tier 0 — Demo</strong></td><td>Build screening, document extraction, and packet assembly for AZ on synthetic data</td><td>None — synthetic data, so no compliance gate</td><td><strong>2–4 weeks</strong></td></tr>
+    <tr><td><strong>Tier 1 — Production pilot</strong></td><td>Harden the pipeline; add a simple EHR data feed and the staff review/approve UI (~3–4 weeks of build)</td><td>Sign BAAs, pass Connections' security review, get EHR data access, confirm HPE qualification</td><td><strong>2–4 months</strong> (gated by people track)</td></tr>
+    <tr><td><strong>Tier 2 — Scaled</strong></td><td>Add Virginia &amp; Maryland rules packs, portal auto-submission, renewals</td><td>Per-state compliance, portal access/agreements, ongoing rule updates as OBBBA changes roll out</td><td><strong>6–12 months</strong> + maintenance</td></tr>
   </table>
+  <p><strong>Key insight:</strong> the Tier 1 <em>coding</em> is only ~3–4 weeks, but elapsed time is 2–4 months because the regulatory/people track gates go-live. Start those conversations (BAAs, EHR access, HPE) early and in parallel with the Tier 0 build — they are the long pole, not the software.</p>
 
   <div class="cols">
     <div>
