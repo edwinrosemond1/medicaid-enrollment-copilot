@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Medicaid Enrollment Co-Pilot — ROI Calculator</title>
+<style>
+  :root { --bg:#0f1720; --card:#172230; --ink:#e7eef5; --muted:#9fb0c0; --accent:#4cc38a; --line:#243246; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; background:var(--bg); color:var(--ink); line-height:1.4; }
+  .wrap { max-width:900px; margin:0 auto; padding:28px 20px 60px; }
+  h1 { font-size:22px; margin:0 0 4px; }
+  .sub { color:var(--muted); font-size:14px; margin-bottom:22px; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width:640px){ .grid{ grid-template-columns:1fr; } }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px; }
+  .card h2 { font-size:14px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin:0 0 14px; }
+  label { display:block; font-size:13px; margin:12px 0 4px; color:var(--ink); }
+  .hint { color:var(--muted); font-size:11px; }
+  input[type=number]{ width:100%; padding:9px 10px; background:#0c131c; border:1px solid var(--line); border-radius:8px; color:var(--ink); font-size:15px; }
+  .row { display:flex; gap:10px; }
+  .row > div { flex:1; }
+  .out { margin-top:8px; }
+  .metric { display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px dashed var(--line); font-size:14px; }
+  .metric:last-child { border-bottom:none; }
+  .metric .v { font-variant-numeric:tabular-nums; font-weight:600; }
+  .big { background:linear-gradient(135deg,#16352a,#12283a); border:1px solid var(--accent); border-radius:12px; padding:20px; margin-top:16px; text-align:center; }
+  .big .label { color:var(--muted); font-size:13px; text-transform:uppercase; letter-spacing:.06em; }
+  .big .num { color:var(--accent); font-size:34px; font-weight:700; font-variant-numeric:tabular-nums; margin-top:6px; }
+  .note { color:var(--muted); font-size:12px; margin-top:18px; }
+  .facilities { margin-top:16px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Medicaid Enrollment Co-Pilot — ROI Calculator</h1>
+  <div class="sub">Edit any value; results update live. Defaults are illustrative — replace with Connections' actuals. Scope: AZ / VA / MD.</div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Inputs (per facility / year)</h2>
+
+      <label>Uninsured patients seen / year <span class="hint">(P)</span></label>
+      <input type="number" id="P" value="4000" min="0">
+
+      <label>% uninsured who are Medicaid-eligible <span class="hint">(E)</span></label>
+      <input type="number" id="E" value="60" min="0" max="100">
+
+      <div class="row">
+        <div>
+          <label>Current attempt rate % <span class="hint">(A_now)</span></label>
+          <input type="number" id="Anow" value="10" min="0" max="100">
+        </div>
+        <div>
+          <label>Current success rate % <span class="hint">(S_now)</span></label>
+          <input type="number" id="Snow" value="70" min="0" max="100">
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label>Tool attempt rate % <span class="hint">(A_tool)</span></label>
+          <input type="number" id="Atool" value="80" min="0" max="100">
+        </div>
+        <div>
+          <label>Tool success rate % <span class="hint">(S_tool)</span></label>
+          <input type="number" id="Stool" value="75" min="0" max="100">
+        </div>
+      </div>
+
+      <label>Avg realized reimbursement / enrolled patient $ <span class="hint">(R) — biggest lever, verify</span></label>
+      <input type="number" id="R" value="2500" min="0">
+
+      <label>Annual tool run + maintenance cost $</label>
+      <input type="number" id="cost" value="55000" min="0">
+
+      <div class="facilities">
+        <label># of facilities (scales the total) </label>
+        <input type="number" id="fac" value="1" min="1">
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Results</h2>
+      <div class="out">
+        <div class="metric"><span>Eligible patients</span><span class="v" id="r_elig">—</span></div>
+        <div class="metric"><span>Enrollments today</span><span class="v" id="r_now">—</span></div>
+        <div class="metric"><span>Enrollments with tool</span><span class="v" id="r_tool">—</span></div>
+        <div class="metric"><span><strong>Additional enrollments / yr</strong></span><span class="v" id="r_add">—</span></div>
+        <div class="metric"><span>Gross new revenue / yr</span><span class="v" id="r_gross">—</span></div>
+        <div class="metric"><span>Less annual tool cost</span><span class="v" id="r_cost">—</span></div>
+      </div>
+
+      <div class="big">
+        <div class="label">Net value / year (per facility)</div>
+        <div class="num" id="r_net">—</div>
+      </div>
+      <div class="big" style="background:linear-gradient(135deg,#16352a,#102a3a);">
+        <div class="label">Net value / year (all facilities)</div>
+        <div class="num" id="r_total">—</div>
+      </div>
+
+      <div class="note">
+        "Attempt" = an application is actually worked, not just screened. The tool decouples screening (now 100%) from staff effort, raising attempt rate without new hires. Use the prototype to <em>measure</em> the real tool rates. R should be realized reimbursement net of denials; HPE / retroactive eligibility may add revenue not modeled here.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const ids = ["P","E","Anow","Snow","Atool","Stool","R","cost","fac"];
+  const $ = id => document.getElementById(id);
+  const num = id => parseFloat($(id).value) || 0;
+  const fmt = n => "$" + Math.round(n).toLocaleString();
+  const int = n => Math.round(n).toLocaleString();
+
+  function calc(){
+    const P=num("P"), E=num("E")/100, Anow=num("Anow")/100, Snow=num("Snow")/100,
+          Atool=num("Atool")/100, Stool=num("Stool")/100, R=num("R"), cost=num("cost"), fac=num("fac")||1;
+    const elig = P*E;
+    const now = elig*Anow*Snow;
+    const tool = elig*Atool*Stool;
+    const add = Math.max(0, tool-now);
+    const gross = add*R;
+    const net = gross - cost;
+    $("r_elig").textContent = int(elig);
+    $("r_now").textContent  = int(now);
+    $("r_tool").textContent = int(tool);
+    $("r_add").textContent  = int(add);
+    $("r_gross").textContent= fmt(gross);
+    $("r_cost").textContent = "-" + fmt(cost);
+    $("r_net").textContent  = fmt(net);
+    $("r_total").textContent= fmt(net*fac);
+  }
+  ids.forEach(id => $(id).addEventListener("input", calc));
+  calc();
+</script>
+</body>
+</html>

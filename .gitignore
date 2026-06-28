@@ -1,0 +1,17 @@
+# Private / local-only — never commit
+PRIVATE-monetization.md
+PRIVATE-*.md
+*.private.md
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Env / secrets (for when the prototype starts)
+.env
+.env.*
+*.key
+*.pem
